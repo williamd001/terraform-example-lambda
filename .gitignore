@@ -26,3 +26,7 @@
 .idea/
 
 node_modules/
+
+resources/zipped/
+
+resources/GetCustomers/build

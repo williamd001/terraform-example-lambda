@@ -13,11 +13,12 @@ provider "aws" {
   secret_key = var.secret_key
 }
 
-data "archive_file" "lambda_get_order_zip" {
+data "archive_file" "lambda_get_customers_zip" {
   type = "zip"
 
-  source_dir  = "${path.module}/resources/GetOrder"
-  output_path = "${path.module}/resources/GetOrder.zip"
+  source_dir  = "${path.module}/resources/GetCustomers/build"
+
+  output_path = "${path.module}/resources/zipped/GetCustomers.zip"
 }
 
 resource "aws_iam_role" "lambda_iam_role" {
@@ -35,11 +36,11 @@ resource "aws_iam_role" "lambda_iam_role" {
   })
 }
 
-resource "aws_lambda_function" "get_order" {
-  function_name    = "getOrderV3"
+resource "aws_lambda_function" "get_customers" {
+  function_name    = "getCustomers"
   role             = aws_iam_role.lambda_iam_role.arn
   runtime          = "nodejs18.x"
-  filename         = "${path.module}/resources/GetOrder.zip"
+  filename         = "${path.module}/resources/zipped/GetCustomers.zip"
   handler          = "index.handler"
-  source_code_hash = data.archive_file.lambda_get_order_zip.output_base64sha256
+  source_code_hash = data.archive_file.lambda_get_customers_zip.output_base64sha256
 }
