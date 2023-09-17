@@ -24,3 +24,5 @@
 
 # Ignored vscode files
 .idea/
+
+node_modules/
