@@ -8,9 +8,9 @@ terraform {
 }
 
 provider "aws" {
-  region     = "us-east-1"
-  access_key = "ACCESS_KEY_HERE"
-  secret_key = "SECRET_HERE"
+  region     = var.region
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
 
 data "archive_file" "lambda_get_order_zip" {
@@ -36,9 +36,10 @@ resource "aws_iam_role" "lambda_iam_role" {
 }
 
 resource "aws_lambda_function" "get_order" {
-  function_name = "getOrderV3"
-  role          = aws_iam_role.lambda_iam_role.arn
-  runtime       = "nodejs18.x"
-  filename      = "${path.module}/resources/GetOrder.zip"
-  handler       = "index.handler"
+  function_name    = "getOrderV3"
+  role             = aws_iam_role.lambda_iam_role.arn
+  runtime          = "nodejs18.x"
+  filename         = "${path.module}/resources/GetOrder.zip"
+  handler          = "index.handler"
+  source_code_hash = data.archive_file.lambda_get_order_zip.output_base64sha256
 }
