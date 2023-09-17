@@ -1,3 +1,8 @@
+locals {
+  lambda_source_dir = "${path.module}/resources/lambdas"
+  zipped_lambda_dir = "${path.module}/zipped"
+}
+
 resource "aws_iam_role" "lambda_iam_role" {
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
@@ -15,8 +20,8 @@ resource "aws_iam_role" "lambda_iam_role" {
 
 data "archive_file" "lambda_get_customers_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/resources/lambdas/GetCustomers/build"
-  output_path = "${path.module}/zipped/GetCustomers.zip"
+  source_dir  = "${local.lambda_source_dir}/GetCustomers/build"
+  output_path = "${local.zipped_lambda_dir}/GetCustomers.zip"
 }
 
 resource "aws_lambda_function" "get_customers" {
@@ -28,10 +33,19 @@ resource "aws_lambda_function" "get_customers" {
   source_code_hash = data.archive_file.lambda_get_customers_zip.output_base64sha256
 }
 
+resource "null_resource" "sam_metadata_aws_lambda_function_get_customers" {
+  triggers = {
+    resource_name        = "aws_lambda_function.get_customers"
+    resource_type        = "ZIP_LAMBDA_FUNCTION"
+    original_source_code = "${local.lambda_source_dir}/GetCustomers/build"
+    built_output_path    = "${local.zipped_lambda_dir}/GetCustomers.zip"
+  }
+}
+
 data "archive_file" "lambda_get_orders_zip" {
-  type = "zip"
-  source_dir  = "${path.module}/resources/lambdas/GetOrders/build"
-  output_path = "${path.module}/zipped/GetOrders.zip"
+  type        = "zip"
+  source_dir  = "${local.lambda_source_dir}/GetOrders/build"
+  output_path = "${local.zipped_lambda_dir}/GetOrders.zip"
 }
 
 resource "aws_lambda_function" "get_orders" {
@@ -41,4 +55,13 @@ resource "aws_lambda_function" "get_orders" {
   handler          = "index.handler"
   filename         = data.archive_file.lambda_get_orders_zip.output_path
   source_code_hash = data.archive_file.lambda_get_orders_zip.output_base64sha256
+}
+
+resource "null_resource" "sam_metadata_aws_lambda_function_get_orders" {
+  triggers = {
+    resource_name        = "aws_lambda_function.get_orders"
+    resource_type        = "ZIP_LAMBDA_FUNCTION"
+    original_source_code = "${local.lambda_source_dir}/GetOrders/build"
+    built_output_path    = "${local.zipped_lambda_dir}/GetOrders.zip"
+  }
 }

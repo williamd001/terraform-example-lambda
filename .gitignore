@@ -30,3 +30,7 @@ node_modules/
 zipped/
 
 resources/lambdas/*/build
+
+.aws-sam/
+
+.aws-sam-iacs/

@@ -8,3 +8,9 @@
 4. run `terraform apply`
 
 note: you can also use `./build_lambdas` to rebuild all lambda functions
+
+## Running locally via AWS SAM
+
+1. run `./build_lambdas.sh`
+2. run `sam build --hook-name terraform --beta-features`
+3. run `sam local invoke aws_lambda_function.get_customers`
