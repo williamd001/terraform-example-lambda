@@ -11,6 +11,14 @@ export const handler = async () => {
                     id: 2,
                     name: 'oak table'
                 },
+                {
+                    id: 3,
+                    name: 'oak chair'
+                },
+                {
+                    id: 4,
+                    name: 'oak desk'
+                },
             ]
         )
     }

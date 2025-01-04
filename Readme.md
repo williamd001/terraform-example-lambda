@@ -3,16 +3,21 @@
 ## Overview
 Welcome! This repo was setup to provide a simple example of a typescript multi-lambda setup using terraform. Hopefully this assists someone out there since the official aws/terraform docs were a little vague on the topic.  
 
+## What does this terraform code do?
+This terraform project will create two different typescript lambdas and push them to the AWS account configured in the [terraform.auto.tfvars](terraform.auto.tfvars) file.
+
+see [get_orders](resources/lambdas/GetOrders/index.ts) and [get_customers](resources/lambdas/GetCustomers/index.ts) for the lambda code.
+
 ## How to use
 
-1. Add AWS credentials to terraform.auto.tfvars
-2. run `npx tsc --project  resources/lambdas/GetOrders/` to compile typescript code and generate a build directory
-3. run `terraform plan`
-4. run `terraform apply`
-
-note: you can also use `./build_lambdas` to rebuild all lambda functions
+1. Add AWS credentials to [terraform.auto.tfvars](terraform.auto.tfvars) file
+2. run `./build_lambdas.sh` to compile the lambda typescript code
+3. run `terraform plan` to check the terraform changes (optional)
+4. run `terraform apply` to apply the changes
 
 ## Running locally via AWS SAM
+
+note: you will need docker installed on your local machine to use AWS SAM
 
 1. run `./build_lambdas.sh`
 2. run `sam build --hook-name terraform --beta-features`
